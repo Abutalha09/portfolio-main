@@ -15,7 +15,7 @@
   <header>
     <nav class="nav">
       <div class="nav__left">
-        <a href="#home" class="nav__logo">Portfolio</a>
+        <a href="#home" class="nav__logo">Mohammad Abutalha</a>
       </div>
 
       <ul class="nav__list">
@@ -23,9 +23,9 @@
         <li><a href="#about" class="nav__link">About</a></li>
         <li><a href="#skills" class="nav__link">Skills</a></li>
         <li><a href="#experience" class="nav__link">Experience</a></li>
-        <li><a href="#achievements" class="nav__link">Academic Achievements</a></li>
+        <li><a href="#achievements" class="nav__link">Education</a></li>
         <li><a href="#certificate" class="nav__link">Certificates</a></li>
-        <li><a href="#work" class="nav__link">Project</a></li>
+        <li><a href="#work" class="nav__link">Projects</a></li>
         <li><a href="#contact" class="nav__link">Contact</a></li>
       </ul>
 
@@ -71,12 +71,18 @@
   <main>
     <section class="home" id="home">
       <div class="home__data">
-        <h1>Hi I'm Mohammad Abutalha</h1>
-        <h3>I'm a web developer who loves building clean, modern and user-friendly websites.</h3>
-        <h4>Turning ideas into interactive experiences.</h4>
+        <h1>Frontend Developer & Product Support Associate</h1>
+        <h3>Hi, I'm Mohammad Abutalha. I build clean web interfaces and support real software products with a user-first mindset.</h3>
+        <h4>BCA graduate with hands-on work across HTML, CSS, JavaScript, Python, EduBuddy, and HotelBuddy.</h4>
+
+        <div class="home__proof" aria-label="Portfolio highlights">
+          <span><strong>3</strong> live projects</span>
+          <span><strong>Current</strong> Polar Bear Tech</span>
+          <span><strong>BCA</strong> 2023 - 2026</span>
+        </div>
 
         <div class="home__buttons">
-          <a href="mohammad_abutalha  resume.docx" download class="button">Download Resume</a>
+          <a href="mohammad_abutalha main resume.pdf" download class="button">Download Resume</a>
           <a href="#contact" class="button">Contact Me</a>
         </div>
       </div>
@@ -98,7 +104,7 @@
       <h2 class="section-title">About</h2>
       <div class="about__container">
         <div class="about__img">
-          <img src="talha2.jpg" alt="About Mohammad Abutalha">
+          <img src="talha2.jpg" alt="About Mohammad Abutalha" loading="lazy">
         </div>
         <div>
           <h3 class="about__subtitle">Hi, I'm Mohammad Abutalha</h3>
@@ -142,7 +148,7 @@
         </div>
 
         <div>
-          <img src="abu.jpg" alt="Skills showcase" class="skills__img">
+          <img src="abu.jpg" alt="Skills showcase" class="skills__img" loading="lazy">
         </div>
       </div>
     </section>
@@ -851,8 +857,6 @@
     });
 
     const sections = document.querySelectorAll('.home, .section');
-    const showcaseCards = document.querySelectorAll('.showcase-card');
-    const projectItems = document.querySelectorAll('.project-card');
 
     const observer = new IntersectionObserver((entries, observerInstance) => {
       entries.forEach(entry => {
@@ -861,26 +865,15 @@
           observerInstance.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
 
     sections.forEach(section => {
       observer.observe(section);
     });
 
-    showcaseCards.forEach(item => {
-      observer.observe(item);
-    });
-
-    projectItems.forEach(item => {
-      observer.observe(item);
-    });
-
     const navToggle = document.getElementById('nav-toggle');
     const navList = document.querySelector('.nav__list');
     const navLinks = document.querySelectorAll('.nav__link');
-    const textTargets = document.querySelectorAll(
-      'main h1, main h2, main h3, main h4, main p, main li, .skills__names, .contact__label, .experience__eyebrow, .experience__pill, .experience__metric-value, .experience__metric-label, .experience__spotlight-kicker, .experience__brand-chip, .experience-product__label, .experience-product__status, .experience-product__tag, .showcase__eyebrow, .showcase__pill, .showcase__metric-value, .showcase__metric-label, .showcase__spotlight-kicker, .showcase__chip, .showcase-card__label, .showcase-card__status, .showcase-card__date, .showcase-card__tag, .projects__eyebrow, .projects__pill, .projects__metric-value, .projects__metric-label, .projects__spotlight-kicker, .projects__brand-chip, .project-card__label, .project-card__status, .project-card__tag, footer h3, footer p, .nav__logo, .nav__link'
-    );
 
     const setActiveLink = (sectionId) => {
       navLinks.forEach(link => {
@@ -910,36 +903,6 @@
       setActiveLink(currentSectionId);
     };
 
-    const textGroups = new Map();
-    textTargets.forEach(target => {
-      const group = target.closest('.home, .section, header, footer') || document.body;
-      const order = textGroups.get(group) || 0;
-      textGroups.set(group, order + 1);
-      target.classList.add('text-reveal');
-      target.style.setProperty('--text-delay', `${Math.min(order * 90, 540)}ms`);
-    });
-
-    const headerTextTargets = document.querySelectorAll('.nav__logo, .nav__link');
-    requestAnimationFrame(() => {
-      headerTextTargets.forEach(target => {
-        target.classList.add('is-visible');
-      });
-    });
-
-    const textObserver = new IntersectionObserver((entries, observerInstance) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observerInstance.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    textTargets.forEach(target => {
-      if (!target.closest('header')) {
-        textObserver.observe(target);
-      }
-    });
 
     navToggle.addEventListener('click', () => {
       navList.classList.toggle('show');
@@ -953,7 +916,17 @@
       });
     });
 
-    window.addEventListener('scroll', updateActiveLink, { passive: true });
+    let isScrollPending = false;
+    window.addEventListener('scroll', () => {
+      if (!isScrollPending) {
+        window.requestAnimationFrame(() => {
+          updateActiveLink();
+          isScrollPending = false;
+        });
+        isScrollPending = true;
+      }
+    }, { passive: true });
+
     window.addEventListener('load', updateActiveLink);
     window.addEventListener('resize', updateActiveLink);
     window.addEventListener('hashchange', () => {
